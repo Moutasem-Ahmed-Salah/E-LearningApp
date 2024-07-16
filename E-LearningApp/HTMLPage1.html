@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=ASs31wotnxOsUP6j9Rf_fm24qpM-9Oi4aZWdzvHoG4LTfARznPvBrGbp_2DKFDiU0_D8jL4MIlfqN1Wp&currency=USD"></script>
+
+    <script>
+        paypal.Buttons({
+            async createOrder() {
+                const response = await fetch("/my-server/create-paypal-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        cart: [{
+                            sku: "YOUR_PRODUCT_STOCK_KEEPING_UNIT",
+                            quantity: "YOUR_PRODUCT_QUANTITY",
+                        }]
+                    })
+                });
+
+                const order = await response.json();
+
+                return order.id;
+            }
+        }).render('#paypal-button-container');
+    </script>
+</body>
+</html>
